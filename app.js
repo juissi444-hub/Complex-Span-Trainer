@@ -699,30 +699,47 @@ class WMCTrainer {
 
     // Submit recall
     submitRecall() {
-        console.log('Submit recall called');
-        this.hapticFeedback();
+        try {
+            console.log('=== SUBMIT RECALL CALLED ===');
+            console.log('Current recall:', this.currentRecall);
+            console.log('Current items:', this.currentItems);
+            console.log('Current set size:', this.currentSetSize);
 
-        // Ensure we have at least one item recalled
-        if (this.currentRecall.length === 0) {
-            const confirmSubmit = confirm('You haven\'t selected any items. Submit empty response?');
-            console.log('Empty recall, user confirmed:', confirmSubmit);
-            if (!confirmSubmit) {
-                return;
+            this.hapticFeedback();
+
+            // Ensure we have at least one item recalled
+            if (this.currentRecall.length === 0) {
+                console.log('No items recalled, showing confirmation');
+                const confirmSubmit = confirm('You haven\'t selected any items. Submit empty response?');
+                console.log('Empty recall, user confirmed:', confirmSubmit);
+                if (!confirmSubmit) {
+                    console.log('User cancelled empty submit');
+                    return;
+                }
             }
+
+            console.log('Building trial data...');
+            // Calculate score for this trial
+            const trialData = {
+                setSize: this.currentSetSize,
+                items: [...this.currentItems],
+                recall: [...this.currentRecall],
+                processingResponses: [...this.currentResponses],
+                score: this.calculateTrialScore()
+            };
+
+            console.log('Trial data created:', trialData);
+            console.log('Adding to responses array...');
+            this.responses.push(trialData);
+            console.log('Responses array now has', this.responses.length, 'items');
+            console.log('Calling showFeedback...');
+            this.showFeedback(trialData);
+            console.log('=== SUBMIT RECALL COMPLETE ===');
+        } catch (error) {
+            console.error('ERROR IN SUBMIT RECALL:', error);
+            console.error('Error stack:', error.stack);
+            alert('Error submitting recall: ' + error.message);
         }
-
-        // Calculate score for this trial
-        const trialData = {
-            setSize: this.currentSetSize,
-            items: [...this.currentItems],
-            recall: [...this.currentRecall],
-            processingResponses: [...this.currentResponses],
-            score: this.calculateTrialScore()
-        };
-
-        console.log('Trial data:', trialData);
-        this.responses.push(trialData);
-        this.showFeedback(trialData);
     }
 
     // Calculate trial score (partial credit)
@@ -751,27 +768,43 @@ class WMCTrainer {
 
     // Show feedback
     showFeedback(trialData) {
-        this.showScreen('feedback');
-        const content = document.getElementById('feedback-content');
+        try {
+            console.log('=== SHOW FEEDBACK CALLED ===');
+            console.log('Trial data:', trialData);
+            console.log('Calling showScreen("feedback")...');
+            this.showScreen('feedback');
+            console.log('Getting feedback-content element...');
+            const content = document.getElementById('feedback-content');
+            console.log('Feedback content element:', content);
 
-        const processingAccuracy = trialData.processingResponses.filter(r => r.correct).length /
-                                   trialData.processingResponses.length * 100;
+            console.log('Calculating processing accuracy...');
+            const processingAccuracy = trialData.processingResponses.filter(r => r.correct).length /
+                                       trialData.processingResponses.length * 100;
+            console.log('Processing accuracy:', processingAccuracy);
 
-        content.innerHTML = `
-            <div class="feedback-stats">
-                <div class="stat-card">
-                    <div class="stat-value">${trialData.score}/${trialData.setSize}</div>
-                    <div class="stat-label">Items Recalled Correctly</div>
+            console.log('Building feedback HTML...');
+            content.innerHTML = `
+                <div class="feedback-stats">
+                    <div class="stat-card">
+                        <div class="stat-value">${trialData.score}/${trialData.setSize}</div>
+                        <div class="stat-label">Items Recalled Correctly</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value">${processingAccuracy.toFixed(0)}%</div>
+                        <div class="stat-label">Processing Accuracy</div>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-value">${processingAccuracy.toFixed(0)}%</div>
-                    <div class="stat-label">Processing Accuracy</div>
-                </div>
-            </div>
-            <p style="text-align: center; color: var(--secondary-color); margin-top: 20px;">
-                Trial ${this.currentTrial + 1} of ${this.trials.length}
-            </p>
-        `;
+                <p style="text-align: center; color: var(--secondary-color); margin-top: 20px;">
+                    Trial ${this.currentTrial + 1} of ${this.trials.length}
+                </p>
+            `;
+            console.log('Feedback HTML set');
+            console.log('=== SHOW FEEDBACK COMPLETE ===');
+        } catch (error) {
+            console.error('ERROR IN SHOW FEEDBACK:', error);
+            console.error('Error stack:', error.stack);
+            alert('Error showing feedback: ' + error.message);
+        }
     }
 
     // Next trial

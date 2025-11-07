@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <title>Working Memory Capacity Trainer</title>
-    <link rel="stylesheet" href="styles.css?v=3">
+    <link rel="stylesheet" href="styles.css?v=4">
 </head>
 <body>
     <!-- Mobile Navigation Header -->
@@ -137,7 +137,7 @@
                 <div id="recall-content"></div>
                 <div class="recall-buttons">
                     <button class="btn-warning" onclick="window.app && window.app.clearRecall()">Clear</button>
-                    <button class="btn-primary" onclick="window.app && window.app.submitRecall()">Submit</button>
+                    <button class="btn-primary" id="submit-recall-btn" onclick="console.log('Submit button clicked!'); window.app && window.app.submitRecall(); return false;">Submit</button>
                 </div>
             </div>
         </div>
@@ -205,9 +205,9 @@
         </div>
     </div>
 
-    <script src="app.js?v=3"></script>
+    <script src="app.js?v=4"></script>
     <script>
-        console.log('WMC Trainer v3 - Page loaded - Fixed submit & mobile display');
+        console.log('WMC Trainer v4 - Page loaded - COMPREHENSIVE DEBUGGING ENABLED');
 
         // Register service worker for offline capability
         if ('serviceWorker' in navigator) {
@@ -226,8 +226,26 @@
         setTimeout(() => {
             if (window.app) {
                 console.log('✓ App is available on window.app');
+                console.log('✓ submitRecall function exists:', typeof window.app.submitRecall);
             } else {
                 console.error('✗ App is NOT available on window.app!');
+            }
+
+            // Add backup event listener to submit button
+            const submitBtn = document.getElementById('submit-recall-btn');
+            if (submitBtn) {
+                console.log('✓ Submit button found, adding backup event listener');
+                submitBtn.addEventListener('click', function(e) {
+                    console.log('=== BACKUP EVENT LISTENER FIRED ===');
+                    if (window.app && window.app.submitRecall) {
+                        console.log('Calling submitRecall from backup listener...');
+                        window.app.submitRecall();
+                    } else {
+                        console.error('window.app or submitRecall not available!');
+                    }
+                });
+            } else {
+                console.warn('Submit button not found in DOM');
             }
         }, 1000);
     </script>
