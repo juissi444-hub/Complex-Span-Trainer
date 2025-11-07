@@ -193,6 +193,7 @@ class WMCTrainer {
 
     // Start a specific task
     startTask(taskType) {
+        console.log(`=== START TASK: ${taskType} ===`);
         this.currentTask = taskType;
         this.currentTrial = 0;
         this.responses = [];
@@ -202,6 +203,7 @@ class WMCTrainer {
         this.processingErrors = 0;
         this.speedErrors = 0;
 
+        console.log(`Task set to: ${this.currentTask}`);
         this.showInstructions(taskType);
     }
 
@@ -381,9 +383,13 @@ class WMCTrainer {
         this.trialStartTime = Date.now();
 
         const content = document.getElementById('practice-content');
+        console.log(`=== PRACTICE PROCESSING TRIAL ${this.practiceTrialCount} ===`);
+        console.log(`Current task: ${this.currentTask}`);
 
         if (this.currentTask === 'operation') {
+            console.log('Generating math problem for practice...');
             const problem = this.generateMathProblem();
+            console.log(`Math problem: ${problem.equation} = ${problem.answer}, Correct: ${problem.correct}`);
             content.innerHTML = `
                 <div class="processing-task">
                     <div class="equation">${problem.equation} = ${problem.answer}</div>
@@ -521,12 +527,17 @@ class WMCTrainer {
 
     // Show processing task
     showProcessingTask(callback) {
+        console.log(`=== SHOW PROCESSING TASK ===`);
+        console.log(`Current task: ${this.currentTask}`);
+
         const content = document.getElementById('task-content');
         this.trialStartTime = Date.now();
         let correctAnswer;
 
         if (this.currentTask === 'operation') {
+            console.log('Generating math problem for operation span...');
             const problem = this.generateMathProblem();
+            console.log(`Math problem: ${problem.equation} = ${problem.answer}, Correct: ${problem.correct}`);
             correctAnswer = problem.correct;
 
             content.innerHTML = `
@@ -539,6 +550,7 @@ class WMCTrainer {
                 </div>
             `;
         } else if (this.currentTask === 'symmetry') {
+            console.log('Generating symmetry pattern...');
             const pattern = this.generateSymmetryPattern();
             correctAnswer = pattern.symmetrical;
 
@@ -552,6 +564,7 @@ class WMCTrainer {
                 </div>
             `;
         } else if (this.currentTask === 'rotation') {
+            console.log('Generating rotated letter...');
             const letter = this.generateRotatedLetter();
             correctAnswer = !letter.mirrored;
 
@@ -564,8 +577,11 @@ class WMCTrainer {
                     </div>
                 </div>
             `;
+        } else {
+            console.error(`Unknown task type: ${this.currentTask}`);
         }
 
+        console.log(`Processing task HTML set. Content length: ${content.innerHTML.length}`);
         this.processingCallback = callback;
     }
 
