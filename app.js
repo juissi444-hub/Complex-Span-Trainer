@@ -439,6 +439,9 @@ class WMCTrainer {
 
     // Start main task
     startMainTask() {
+        console.log('=== STARTING MAIN TASK ===');
+        console.log(`Task: ${this.currentTask}`);
+
         // Adaptive level progression based on research recommendations
         // Start at set size 3 for operation, 2 for spatial tasks
         // If participant gets 2/3 or 3/3 trials correct at a level, advance
@@ -457,8 +460,11 @@ class WMCTrainer {
         this.trials = [];
         this.currentTrial = 0;
 
+        console.log(`Starting level: ${this.currentLevel}, Max level: ${this.maxLevel}`);
+
         // Generate initial 3 trials at current level
         this.generateTrialsForLevel();
+        console.log(`Generated 3 trials. Trials array: [${this.trials.join(', ')}]`);
         this.saveSessionProgress();
 
         this.runTrial();
@@ -474,6 +480,7 @@ class WMCTrainer {
     // Run a single trial
     runTrial() {
         if (this.currentTrial >= this.trials.length) {
+            console.log('All trials completed, showing results');
             this.showResults();
             return;
         }
@@ -482,6 +489,8 @@ class WMCTrainer {
         this.currentItems = [];
         this.currentRecall = [];
         this.currentResponses = [];
+
+        console.log(`Running trial ${this.currentTrial + 1}, Level ${this.currentLevel}, Set size ${this.currentSetSize}, trialsAtLevel ${this.trialsAtLevel}`);
 
         // Update progress
         document.getElementById('progress').style.width =
@@ -845,10 +854,14 @@ class WMCTrainer {
         this.currentTrial++;
         this.trialsAtLevel++;
 
+        console.log(`Next trial: currentTrial=${this.currentTrial}, trialsAtLevel=${this.trialsAtLevel}, currentLevel=${this.currentLevel}`);
+
         // Check if we've completed 3 trials at current level
         if (this.trialsAtLevel >= 3) {
+            console.log('Completed 3 trials at this level, checking progression...');
             this.checkLevelProgression();
         } else {
+            console.log(`Continuing with trial ${this.trialsAtLevel + 1} at level ${this.currentLevel}`);
             this.saveSessionProgress();
             this.runTrial();
         }
@@ -858,6 +871,11 @@ class WMCTrainer {
     checkLevelProgression() {
         // Get the last 3 trials (current level)
         const lastThreeTrials = this.responses.slice(-3);
+
+        console.log('=== CHECKING LEVEL PROGRESSION ===');
+        console.log(`Current level: ${this.currentLevel}, Max level: ${this.maxLevel}`);
+        console.log(`Total responses: ${this.responses.length}`);
+        console.log('Last 3 trials:', lastThreeTrials.map(t => `${t.score}/${t.setSize}`).join(', '));
 
         // Count how many were perfectly recalled (score === setSize)
         const perfectRecalls = lastThreeTrials.filter(trial =>
@@ -870,19 +888,25 @@ class WMCTrainer {
         if (perfectRecalls >= 2 && this.currentLevel < this.maxLevel) {
             this.currentLevel++;
             this.trialsAtLevel = 0;
-            console.log(`Advancing to level ${this.currentLevel}`);
+            console.log(`✓ ADVANCING to level ${this.currentLevel}`);
 
             // Generate 3 more trials at new level
             this.generateTrialsForLevel();
+            console.log(`Generated 3 trials at level ${this.currentLevel}. Total trials now: ${this.trials.length}`);
             this.saveSessionProgress();
             this.runTrial();
         }
         // If fewer than 2 correct OR at max level, stop testing
         else {
-            console.log('Testing complete - showing results');
+            if (perfectRecalls < 2) {
+                console.log(`✗ STOPPING - Only ${perfectRecalls}/3 perfect recalls (need 2+)`);
+            } else {
+                console.log(`✗ STOPPING - Reached max level ${this.maxLevel}`);
+            }
             this.clearSessionProgress();
             this.showResults();
         }
+        console.log('=== END PROGRESSION CHECK ===');
     }
 
     // Show results
