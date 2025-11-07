@@ -298,6 +298,8 @@ class WMCTrainer {
             this.practiceProcessingOnly(content);
         } else if (this.practicePhase === 3) {
             phaseTitle.textContent = 'Combined Practice';
+            // Clear practice phase before starting main task
+            this.practicePhase = 0;
             this.startMainTask();
         }
     }
@@ -317,9 +319,10 @@ class WMCTrainer {
     runStoragePractice() {
         // Generate 3 random items based on task
         this.currentItems = [];
-        const setSize = 3;
+        this.currentSetSize = 3;  // Set size for practice
+        this.currentResponses = [];  // Empty processing responses for storage-only
 
-        for (let i = 0; i < setSize; i++) {
+        for (let i = 0; i < this.currentSetSize; i++) {
             if (this.currentTask === 'operation' || this.currentTask === 'reading') {
                 this.currentItems.push(this.getRandomLetter());
             } else if (this.currentTask === 'symmetry') {
@@ -824,6 +827,7 @@ class WMCTrainer {
         try {
             console.log('=== SHOW FEEDBACK CALLED ===');
             console.log('Trial data:', trialData);
+            console.log('Practice phase:', this.practicePhase);
             console.log('Calling showScreen("feedback")...');
             this.showScreen('feedback');
             console.log('Getting feedback-content element...');
@@ -831,26 +835,45 @@ class WMCTrainer {
             console.log('Feedback content element:', content);
 
             console.log('Calculating processing accuracy...');
-            const processingAccuracy = trialData.processingResponses.filter(r => r.correct).length /
-                                       trialData.processingResponses.length * 100;
+            const processingAccuracy = trialData.processingResponses && trialData.processingResponses.length > 0
+                ? trialData.processingResponses.filter(r => r.correct).length / trialData.processingResponses.length * 100
+                : 0;
             console.log('Processing accuracy:', processingAccuracy);
 
             console.log('Building feedback HTML...');
-            content.innerHTML = `
-                <div class="feedback-stats">
-                    <div class="stat-card">
-                        <div class="stat-value">${trialData.score}/${trialData.setSize}</div>
-                        <div class="stat-label">Items Recalled Correctly</div>
+
+            // Different feedback for practice vs main task
+            if (this.practicePhase === 1) {
+                // Storage only practice - no processing accuracy
+                content.innerHTML = `
+                    <div class="feedback-stats">
+                        <div class="stat-card">
+                            <div class="stat-value">${trialData.score}/${trialData.setSize}</div>
+                            <div class="stat-label">Items Recalled Correctly</div>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-value">${processingAccuracy.toFixed(0)}%</div>
-                        <div class="stat-label">Processing Accuracy</div>
+                    <p style="text-align: center; color: var(--secondary-color); margin-top: 20px;">
+                        Storage practice complete! Next, you'll practice the processing task.
+                    </p>
+                `;
+            } else {
+                // Main task or combined practice - show both metrics
+                content.innerHTML = `
+                    <div class="feedback-stats">
+                        <div class="stat-card">
+                            <div class="stat-value">${trialData.score}/${trialData.setSize}</div>
+                            <div class="stat-label">Items Recalled Correctly</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${processingAccuracy.toFixed(0)}%</div>
+                            <div class="stat-label">Processing Accuracy</div>
+                        </div>
                     </div>
-                </div>
-                <p style="text-align: center; color: var(--secondary-color); margin-top: 20px;">
-                    Trial ${this.currentTrial + 1} of ${this.trials.length}
-                </p>
-            `;
+                    <p style="text-align: center; color: var(--secondary-color); margin-top: 20px;">
+                        Trial ${this.currentTrial + 1} of ${this.trials.length}
+                    </p>
+                `;
+            }
             console.log('Feedback HTML set');
             console.log('=== SHOW FEEDBACK COMPLETE ===');
         } catch (error) {
@@ -862,6 +885,19 @@ class WMCTrainer {
 
     // Next trial
     nextTrial() {
+        console.log('=== NEXT TRIAL CALLED ===');
+        console.log('Practice phase:', this.practicePhase);
+
+        // Handle practice phase transitions
+        if (this.practicePhase === 1) {
+            // After storage practice, move to processing practice
+            console.log('Advancing from storage practice to processing practice');
+            this.practicePhase = 2;
+            this.showPracticePhase();
+            return;
+        }
+
+        // Main task progression
         this.currentTrial++;
 
         console.log(`Next trial: currentTrial=${this.currentTrial}, total trials=${this.trials.length}`);
@@ -889,10 +925,12 @@ class WMCTrainer {
         ).reduce((sum, trial) => sum + trial.setSize, 0);
 
         const totalProcessing = this.responses.reduce((sum, trial) =>
-            sum + trial.processingResponses.length, 0);
+            sum + (trial.processingResponses ? trial.processingResponses.length : 0), 0);
         const correctProcessing = this.responses.reduce((sum, trial) =>
-            sum + trial.processingResponses.filter(r => r.correct).length, 0);
-        const processingAccuracy = (correctProcessing / totalProcessing * 100).toFixed(1);
+            sum + (trial.processingResponses ? trial.processingResponses.filter(r => r.correct).length : 0), 0);
+        const processingAccuracy = totalProcessing > 0
+            ? (correctProcessing / totalProcessing * 100).toFixed(1)
+            : '0.0';
 
         // Save results
         const result = {
