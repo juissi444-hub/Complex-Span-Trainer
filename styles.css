@@ -760,30 +760,40 @@ button {
         padding: 20px;
     }
 
-    /* Larger touch targets for mobile */
+    /* Letter grid for mobile - SAME AS DESKTOP */
     .letter-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
-        padding: 10px;
-        max-width: 450px;
-        margin: 20px auto;
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 10px;
+        max-width: 600px;
+        margin: 30px auto;
     }
 
     .letter-button {
-        padding: 20px 10px;
-        font-size: 1.8em;
-        min-height: 70px;
-        border-width: 3px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        padding: 20px;
+        font-size: 1.5em;
         font-weight: bold;
+        background: var(--bg-color);
+        border: 3px solid var(--border-color);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .letter-button:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: scale(1.05);
     }
 
     .letter-button:active {
         transform: scale(0.92);
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     }
 
     .letter-button.selected {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-dark);
         animation: pulse 0.3s ease;
     }
 
@@ -792,47 +802,65 @@ button {
         50% { transform: scale(1.1); }
     }
 
+    /* Arrow grid for mobile - SAME AS DESKTOP */
     .arrow-grid {
-        grid-template-columns: repeat(2, 1fr);
+        display: grid;
+        grid-template-columns: repeat(4, 100px);
         gap: 15px;
-        padding: 10px;
-        max-width: 400px;
-        margin: 20px auto;
+        margin: 30px auto;
+        width: fit-content;
     }
 
     .arrow-button {
-        width: 100%;
-        height: 90px;
-        font-size: 2.5em;
-        border-width: 3px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+        width: 100px;
+        height: 100px;
+        font-size: 2em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-color);
+        border: 3px solid var(--border-color);
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .arrow-button:hover {
+        background: var(--primary-color);
+        color: white;
+        transform: scale(1.05);
     }
 
     .arrow-button:active {
         transform: scale(0.92);
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     }
 
     .arrow-button.selected {
+        background: var(--primary-color);
+        color: white;
         animation: pulse 0.3s ease;
     }
 
+    /* Memory grid for mobile - SAME AS DESKTOP */
     .memory-grid {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 8px;
-        padding: 10px;
-        max-width: 400px;
-        margin: 20px auto;
+        grid-template-columns: repeat(4, 80px);
+        gap: 10px;
+        margin: 30px auto;
+        width: fit-content;
     }
 
     .memory-cell {
-        width: 100%;
-        aspect-ratio: 1;
-        min-height: 70px;
-        border-width: 3px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        width: 80px;
+        height: 80px;
+        border: 3px solid var(--border-color);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .memory-cell:hover {
+        background: var(--bg-color);
+        transform: scale(1.05);
     }
 
     .memory-cell:active {
@@ -841,23 +869,23 @@ button {
     }
 
     .memory-cell.selected {
-        background: var(--primary-color) !important;
-        border-color: var(--primary-dark) !important;
+        background: rgba(100, 116, 139, 0.2);
+        border-color: var(--secondary-color);
         animation: pulse 0.3s ease;
-        box-shadow: 0 0 0 2px var(--primary-dark);
     }
 
-    /* Response buttons for mobile */
+    /* Response buttons for mobile - SAME AS DESKTOP */
     .response-buttons {
-        flex-direction: column;
-        gap: 15px;
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        margin-top: 30px;
     }
 
     .response-button {
-        width: 100%;
+        padding: 20px 50px;
         font-size: 1.3em;
-        padding: 20px;
-        min-height: 60px;
+        font-weight: bold;
     }
 
     button {
@@ -889,56 +917,63 @@ button {
         background: var(--success-color);
     }
 
-    /* Equation display */
+    /* Display elements for mobile - SAME AS DESKTOP */
     .equation {
-        font-size: 2em;
+        font-size: 2.5em;
         margin: 20px 0;
         font-weight: bold;
-        line-height: 1.4;
     }
 
     .storage-item {
-        font-size: 3.5em;
-        margin: 30px 0;
+        font-size: 4em;
+        font-weight: bold;
+        color: var(--primary-color);
+        margin: 40px 0;
+        animation: scaleIn 0.3s ease;
     }
 
     .arrow-display {
-        font-size: 4.5em;
-        margin: 30px 0;
+        font-size: 5em;
+        margin: 40px 0;
+        transform-origin: center;
     }
 
     .rotated-letter {
-        font-size: 4.5em;
-        margin: 30px 0;
+        font-size: 6em;
+        font-weight: bold;
+        margin: 40px 0;
     }
 
     .processing-task {
-        margin: 20px 0;
-        padding: 20px 10px;
+        text-align: center;
+        font-size: 2em;
+        margin: 40px 0;
     }
 
     #task-content {
-        min-height: 350px;
-        padding: 10px;
+        min-height: 400px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
 
-    /* Symmetry grid for mobile */
+    /* Symmetry grid for mobile - SAME AS DESKTOP */
     .symmetry-grid {
-        grid-template-columns: repeat(8, 1fr);
-        gap: 1px;
-        max-width: 100%;
-        width: 100%;
+        grid-template-columns: repeat(8, 40px);
+        gap: 2px;
+        margin: 20px auto;
+        width: fit-content;
     }
 
     .symmetry-cell {
-        width: 100%;
-        aspect-ratio: 1;
-        min-height: 35px;
-        border-width: 1px;
+        width: 40px;
+        height: 40px;
+        border: 1px solid var(--border-color);
     }
 
     .symmetry-cell.filled {
-        background: #1e293b !important;
+        background: #1e293b;
     }
 
     /* Results for mobile */
