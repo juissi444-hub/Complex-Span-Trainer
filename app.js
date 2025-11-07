@@ -23,6 +23,12 @@ class WMCTrainer {
         this.processingErrors = 0;
         this.speedErrors = 0;
 
+        // Adaptive level progression tracking
+        this.useAdaptiveProgression = true;
+        this.currentLevel = 0;
+        this.trialsAtLevel = 0;
+        this.maxLevel = 9;  // Will be set based on task
+
         // Task-specific data
         this.letters = ['F', 'H', 'J', 'K', 'L', 'N', 'P', 'Q', 'R', 'S', 'T', 'Y'];
         this.arrows = ['↑', '↗', '→', '↘', '↓', '↙', '←', '↖'];
@@ -31,6 +37,9 @@ class WMCTrainer {
         // Navigation history for back button
         this.screenHistory = ['welcome-screen'];
         this.currentScreen = 'welcome-screen';
+
+        // Load any saved session progress
+        this.loadSessionProgress();
 
         // Initialize mobile features
         this.initMobileFeatures();
@@ -430,26 +439,36 @@ class WMCTrainer {
 
     // Start main task
     startMainTask() {
-        // Generate trials based on research recommendations
-        // Using set sizes 3-7 for operation/reading, 2-6 for symmetry/rotation
-        // Extended set sizes (8-9 for operation, 6-7 for spatial) for better discrimination
+        // Adaptive level progression based on research recommendations
+        // Start at set size 3 for operation, 2 for spatial tasks
+        // If participant gets 2/3 or 3/3 trials correct at a level, advance
+        // If participant gets < 2/3 correct, stop testing
 
-        this.trials = [];
-        let setSizes;
-
+        // Set starting level and max level based on task
         if (this.currentTask === 'operation' || this.currentTask === 'reading') {
-            // Set sizes 3-9, three trials each, randomized
-            setSizes = [3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7, 8, 8, 8, 9, 9, 9];
+            this.currentLevel = 3;  // Start at set size 3
+            this.maxLevel = 9;      // Max set size 9
         } else {
-            // Set sizes 2-7, three trials each, randomized
-            setSizes = [2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7];
+            this.currentLevel = 2;  // Start at set size 2 for spatial tasks
+            this.maxLevel = 7;      // Max set size 7 for spatial
         }
 
-        // Shuffle set sizes for randomized presentation
-        this.trials = this.shuffle(setSizes);
+        this.trialsAtLevel = 0;
+        this.trials = [];
         this.currentTrial = 0;
 
+        // Generate initial 3 trials at current level
+        this.generateTrialsForLevel();
+        this.saveSessionProgress();
+
         this.runTrial();
+    }
+
+    // Generate 3 trials for current level
+    generateTrialsForLevel() {
+        for (let i = 0; i < 3; i++) {
+            this.trials.push(this.currentLevel);
+        }
     }
 
     // Run a single trial
@@ -824,7 +843,46 @@ class WMCTrainer {
     // Next trial
     nextTrial() {
         this.currentTrial++;
-        this.runTrial();
+        this.trialsAtLevel++;
+
+        // Check if we've completed 3 trials at current level
+        if (this.trialsAtLevel >= 3) {
+            this.checkLevelProgression();
+        } else {
+            this.saveSessionProgress();
+            this.runTrial();
+        }
+    }
+
+    // Check level progression (adaptive stopping rule)
+    checkLevelProgression() {
+        // Get the last 3 trials (current level)
+        const lastThreeTrials = this.responses.slice(-3);
+
+        // Count how many were perfectly recalled (score === setSize)
+        const perfectRecalls = lastThreeTrials.filter(trial =>
+            trial.score === trial.setSize
+        ).length;
+
+        console.log(`Level ${this.currentLevel} complete: ${perfectRecalls}/3 perfect recalls`);
+
+        // If 2 or more correct AND not at max level, advance
+        if (perfectRecalls >= 2 && this.currentLevel < this.maxLevel) {
+            this.currentLevel++;
+            this.trialsAtLevel = 0;
+            console.log(`Advancing to level ${this.currentLevel}`);
+
+            // Generate 3 more trials at new level
+            this.generateTrialsForLevel();
+            this.saveSessionProgress();
+            this.runTrial();
+        }
+        // If fewer than 2 correct OR at max level, stop testing
+        else {
+            console.log('Testing complete - showing results');
+            this.clearSessionProgress();
+            this.showResults();
+        }
     }
 
     // Show results
@@ -996,6 +1054,61 @@ class WMCTrainer {
     loadResults() {
         const stored = localStorage.getItem('wmcResults');
         return stored ? JSON.parse(stored) : [];
+    }
+
+    // Save session progress to localStorage
+    saveSessionProgress() {
+        const progress = {
+            currentTask: this.currentTask,
+            currentTrial: this.currentTrial,
+            currentLevel: this.currentLevel,
+            trialsAtLevel: this.trialsAtLevel,
+            maxLevel: this.maxLevel,
+            trials: this.trials,
+            responses: this.responses,
+            demographics: this.demographics,
+            timeLimit: this.timeLimit,
+            processingErrors: this.processingErrors,
+            speedErrors: this.speedErrors,
+            timestamp: Date.now()
+        };
+        localStorage.setItem('wmcSessionProgress', JSON.stringify(progress));
+    }
+
+    // Load session progress from localStorage
+    loadSessionProgress() {
+        const stored = localStorage.getItem('wmcSessionProgress');
+        if (!stored) return;
+
+        const progress = JSON.parse(stored);
+
+        // Check if session is recent (within 24 hours)
+        const age = Date.now() - progress.timestamp;
+        if (age > 24 * 60 * 60 * 1000) {
+            console.log('Session expired, clearing...');
+            this.clearSessionProgress();
+            return;
+        }
+
+        // Restore session state
+        this.currentTask = progress.currentTask;
+        this.currentTrial = progress.currentTrial;
+        this.currentLevel = progress.currentLevel;
+        this.trialsAtLevel = progress.trialsAtLevel;
+        this.maxLevel = progress.maxLevel;
+        this.trials = progress.trials || [];
+        this.responses = progress.responses || [];
+        this.demographics = progress.demographics || {};
+        this.timeLimit = progress.timeLimit;
+        this.processingErrors = progress.processingErrors || 0;
+        this.speedErrors = progress.speedErrors || 0;
+
+        console.log('Session progress loaded:', progress);
+    }
+
+    // Clear session progress
+    clearSessionProgress() {
+        localStorage.removeItem('wmcSessionProgress');
     }
 
     // View all results
