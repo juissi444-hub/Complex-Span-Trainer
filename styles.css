@@ -368,15 +368,15 @@ button {
 /* Grid for Symmetry Task */
 .symmetry-grid {
     display: grid;
-    grid-template-columns: repeat(8, 1fr);
+    grid-template-columns: repeat(8, minmax(35px, 45px));
     gap: 2px;
     margin: 20px auto;
-    max-width: 350px;
-    width: 100%;
-    padding: 0 5px;
+    width: fit-content;
+    max-width: 380px;
 }
 
 .symmetry-cell {
+    width: 100%;
     aspect-ratio: 1;
     border: 1px solid var(--border-color);
     background: transparent;
@@ -760,17 +760,17 @@ button {
     }
 
     h1 {
-        font-size: 1.6em;
+        font-size: 2em;
         margin-bottom: 15px;
     }
 
     h2 {
-        font-size: 1.3em;
+        font-size: 1.5em;
         margin-bottom: 15px;
     }
 
     h3 {
-        font-size: 1.1em;
+        font-size: 1.2em;
     }
 
     .info-box, .demographics {
@@ -1019,15 +1019,15 @@ button {
     /* Symmetry grid for mobile - SAME AS DESKTOP */
     .symmetry-grid {
         display: grid;
-        grid-template-columns: repeat(8, 1fr);
+        grid-template-columns: repeat(8, minmax(35px, 45px));
         gap: 2px;
         margin: 15px auto;
-        max-width: calc(100vw - 20px);
-        width: 100%;
-        padding: 0 5px;
+        width: fit-content;
+        max-width: min(380px, calc(100vw - 20px));
     }
 
     .symmetry-cell {
+        width: 100%;
         aspect-ratio: 1;
         border: 1px solid var(--border-color);
         background: transparent;
