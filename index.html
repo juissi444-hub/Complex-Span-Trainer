@@ -11,14 +11,14 @@
 <body>
     <!-- Mobile Navigation Header -->
     <header id="mobile-header" class="mobile-header">
-        <button class="nav-button back-button" onclick="app.goBack()" id="back-btn" style="display: none;">
+        <button class="nav-button back-button" onclick="window.app && window.app.goBack()" id="back-btn" style="display: none;">
             ← Back
         </button>
-        <button class="nav-button home-button" onclick="app.returnToMenu()" id="home-btn">
+        <button class="nav-button home-button" onclick="window.app && window.app.returnToMenu()" id="home-btn">
             🏠
         </button>
         <span class="app-title">WMC Trainer</span>
-        <button class="nav-button help-button" onclick="app.showHelp()" id="help-btn">
+        <button class="nav-button help-button" onclick="window.app && window.app.showHelp()" id="help-btn">
             ?
         </button>
     </header>
@@ -66,7 +66,7 @@
                     </label>
                 </div>
 
-                <button class="btn-primary" onclick="app.selectTask()">Begin Training</button>
+                <button class="btn-primary" onclick="window.app && window.app.selectTask()">Begin Training</button>
             </div>
         </div>
 
@@ -75,26 +75,26 @@
             <div class="container">
                 <h1>Select a Task</h1>
                 <div class="task-grid">
-                    <div class="task-card" onclick="app.startTask('operation')">
+                    <div class="task-card" onclick="window.app && window.app.startTask('operation')">
                         <h3>Operation Span</h3>
                         <p>Verify math equations while remembering letters</p>
                         <div class="task-icon">+×</div>
                         <span class="difficulty">Difficulty: Medium</span>
                     </div>
-                    <div class="task-card" onclick="app.startTask('symmetry')">
+                    <div class="task-card" onclick="window.app && window.app.startTask('symmetry')">
                         <h3>Symmetry Span</h3>
                         <p>Judge symmetry while remembering grid positions</p>
                         <div class="task-icon">⬛</div>
                         <span class="difficulty">Difficulty: Medium-Hard</span>
                     </div>
-                    <div class="task-card" onclick="app.startTask('rotation')">
+                    <div class="task-card" onclick="window.app && window.app.startTask('rotation')">
                         <h3>Rotation Span</h3>
                         <p>Identify rotated letters while remembering arrows</p>
                         <div class="task-icon">↻</div>
                         <span class="difficulty">Difficulty: Hard</span>
                     </div>
                 </div>
-                <button class="btn-secondary" onclick="app.viewResults()">View Results</button>
+                <button class="btn-secondary" onclick="window.app && window.app.viewResults()">View Results</button>
             </div>
         </div>
 
@@ -103,8 +103,8 @@
             <div class="container">
                 <h2 id="task-title"></h2>
                 <div id="instructions-content"></div>
-                <button class="btn-primary" onclick="app.startPractice()">Start Practice</button>
-                <button class="btn-secondary" onclick="app.selectTask()">Back</button>
+                <button class="btn-primary" onclick="window.app && window.app.startPractice()">Start Practice</button>
+                <button class="btn-secondary" onclick="window.app && window.app.selectTask()">Back</button>
             </div>
         </div>
 
@@ -136,8 +136,8 @@
                 <h2>Recall Items in Order</h2>
                 <div id="recall-content"></div>
                 <div class="recall-buttons">
-                    <button class="btn-warning" onclick="app.clearRecall()">Clear</button>
-                    <button class="btn-primary" onclick="app.submitRecall()">Submit</button>
+                    <button class="btn-warning" onclick="window.app && window.app.clearRecall()">Clear</button>
+                    <button class="btn-primary" onclick="window.app && window.app.submitRecall()">Submit</button>
                 </div>
             </div>
         </div>
@@ -147,7 +147,7 @@
             <div class="container">
                 <h2>Trial Complete</h2>
                 <div id="feedback-content"></div>
-                <button class="btn-primary" onclick="app.nextTrial()">Continue</button>
+                <button class="btn-primary" onclick="window.app && window.app.nextTrial()">Continue</button>
             </div>
         </div>
 
@@ -157,8 +157,8 @@
                 <h1>Your Results</h1>
                 <div id="results-content"></div>
                 <div class="results-actions">
-                    <button class="btn-primary" onclick="app.selectTask()">Try Another Task</button>
-                    <button class="btn-secondary" onclick="app.exportResults()">Export Results</button>
+                    <button class="btn-primary" onclick="window.app && window.app.selectTask()">Try Another Task</button>
+                    <button class="btn-secondary" onclick="window.app && window.app.exportResults()">Export Results</button>
                 </div>
             </div>
         </div>
@@ -169,7 +169,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Help & Information</h2>
-                <button class="modal-close" onclick="app.closeHelp()">×</button>
+                <button class="modal-close" onclick="window.app && window.app.closeHelp()">×</button>
             </div>
             <div class="modal-body">
                 <h3>Quick Tips</h3>
@@ -200,7 +200,7 @@
                 <p>For issues or questions, please refer to the documentation or contact support.</p>
             </div>
             <div class="modal-footer">
-                <button class="btn-primary" onclick="app.closeHelp()">Got It</button>
+                <button class="btn-primary" onclick="window.app && window.app.closeHelp()">Got It</button>
             </div>
         </div>
     </div>

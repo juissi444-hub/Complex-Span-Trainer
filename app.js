@@ -283,8 +283,8 @@ class WMCTrainer {
         content.innerHTML = `
             <div class="info-box">
                 <p>Practice remembering items. You'll see 3 items to remember.</p>
-                <button class="btn-primary" onclick="app.runStoragePractice()">Begin Storage Practice</button>
-                <button class="btn-secondary" onclick="app.returnToMenu()">Return to Main Menu</button>
+                <button class="btn-primary" onclick="window.app.runStoragePractice()">Begin Storage Practice</button>
+                <button class="btn-secondary" onclick="window.app.returnToMenu()">Return to Main Menu</button>
             </div>
         `;
     }
@@ -338,8 +338,8 @@ class WMCTrainer {
             <div class="info-box">
                 <p>Practice the processing task. Respond as quickly and accurately as possible.</p>
                 <p>We'll use your speed to set a time limit for the main task.</p>
-                <button class="btn-primary" onclick="app.runProcessingPractice()">Begin Processing Practice</button>
-                <button class="btn-secondary" onclick="app.returnToMenu()">Return to Main Menu</button>
+                <button class="btn-primary" onclick="window.app.runProcessingPractice()">Begin Processing Practice</button>
+                <button class="btn-secondary" onclick="window.app.returnToMenu()">Return to Main Menu</button>
             </div>
         `;
     }
@@ -372,8 +372,8 @@ class WMCTrainer {
                 <div class="processing-task">
                     <div class="equation">${problem.equation} = ${problem.answer}</div>
                     <div class="response-buttons">
-                        <button class="response-button btn-success" onclick="app.respondProcessing(true, ${problem.correct})">Correct</button>
-                        <button class="response-button btn-danger" onclick="app.respondProcessing(false, ${problem.correct})">Incorrect</button>
+                        <button class="response-button btn-success" onclick="window.app.respondProcessing(true, ${problem.correct})">Correct</button>
+                        <button class="response-button btn-danger" onclick="window.app.respondProcessing(false, ${problem.correct})">Incorrect</button>
                     </div>
                 </div>
             `;
@@ -383,8 +383,8 @@ class WMCTrainer {
                 <div class="processing-task">
                     <div>${this.renderSymmetryGrid(pattern.grid)}</div>
                     <div class="response-buttons">
-                        <button class="response-button btn-success" onclick="app.respondProcessing(true, ${pattern.symmetrical})">Symmetrical</button>
-                        <button class="response-button btn-danger" onclick="app.respondProcessing(false, ${pattern.symmetrical})">Not Symmetrical</button>
+                        <button class="response-button btn-success" onclick="window.app.respondProcessing(true, ${pattern.symmetrical})">Symmetrical</button>
+                        <button class="response-button btn-danger" onclick="window.app.respondProcessing(false, ${pattern.symmetrical})">Not Symmetrical</button>
                     </div>
                 </div>
             `;
@@ -394,8 +394,8 @@ class WMCTrainer {
                 <div class="processing-task">
                     <div class="rotated-letter" style="transform: rotate(${letter.rotation}deg) scaleX(${letter.mirrored ? -1 : 1})">${letter.letter}</div>
                     <div class="response-buttons">
-                        <button class="response-button btn-success" onclick="app.respondProcessing(true, ${!letter.mirrored})">Normal</button>
-                        <button class="response-button btn-danger" onclick="app.respondProcessing(false, ${!letter.mirrored})">Mirror</button>
+                        <button class="response-button btn-success" onclick="window.app.respondProcessing(true, ${!letter.mirrored})">Normal</button>
+                        <button class="response-button btn-danger" onclick="window.app.respondProcessing(false, ${!letter.mirrored})">Mirror</button>
                     </div>
                 </div>
             `;
@@ -498,8 +498,8 @@ class WMCTrainer {
                 <div class="processing-task">
                     <div class="equation">${problem.equation} = ${problem.answer}</div>
                     <div class="response-buttons">
-                        <button class="response-button btn-success" onclick="app.processResponse(true, ${correctAnswer})">Correct</button>
-                        <button class="response-button btn-danger" onclick="app.processResponse(false, ${correctAnswer})">Incorrect</button>
+                        <button class="response-button btn-success" onclick="window.app.processResponse(true, ${correctAnswer})">Correct</button>
+                        <button class="response-button btn-danger" onclick="window.app.processResponse(false, ${correctAnswer})">Incorrect</button>
                     </div>
                 </div>
             `;
@@ -511,8 +511,8 @@ class WMCTrainer {
                 <div class="processing-task">
                     ${this.renderSymmetryGrid(pattern.grid)}
                     <div class="response-buttons">
-                        <button class="response-button btn-success" onclick="app.processResponse(true, ${correctAnswer})">Symmetrical</button>
-                        <button class="response-button btn-danger" onclick="app.processResponse(false, ${correctAnswer})">Not Symmetrical</button>
+                        <button class="response-button btn-success" onclick="window.app.processResponse(true, ${correctAnswer})">Symmetrical</button>
+                        <button class="response-button btn-danger" onclick="window.app.processResponse(false, ${correctAnswer})">Not Symmetrical</button>
                     </div>
                 </div>
             `;
@@ -524,8 +524,8 @@ class WMCTrainer {
                 <div class="processing-task">
                     <div class="rotated-letter" style="transform: rotate(${letter.rotation}deg) scaleX(${letter.mirrored ? -1 : 1})">${letter.letter}</div>
                     <div class="response-buttons">
-                        <button class="response-button btn-success" onclick="app.processResponse(true, ${correctAnswer})">Normal</button>
-                        <button class="response-button btn-danger" onclick="app.processResponse(false, ${correctAnswer})">Mirror</button>
+                        <button class="response-button btn-success" onclick="window.app.processResponse(true, ${correctAnswer})">Normal</button>
+                        <button class="response-button btn-danger" onclick="window.app.processResponse(false, ${correctAnswer})">Mirror</button>
                     </div>
                 </div>
             `;
@@ -1112,7 +1112,7 @@ class WMCTrainer {
         let html = '<div class="memory-grid">';
         for (let row = 0; row < 4; row++) {
             for (let col = 0; col < 4; col++) {
-                html += `<div class="memory-cell" onclick="app.addToRecall({row: ${row}, col: ${col}})"></div>`;
+                html += `<div class="memory-cell" onclick="window.app.addToRecall({row: ${row}, col: ${col}})"></div>`;
             }
         }
         html += '</div>';
@@ -1123,7 +1123,7 @@ class WMCTrainer {
     renderLetterGrid() {
         let html = '<div class="letter-grid">';
         for (const letter of this.letters) {
-            html += `<button class="letter-button" onclick="app.addToRecall('${letter}')">${letter}</button>`;
+            html += `<button class="letter-button" onclick="window.app && window.app.addToRecall('${letter}')">${letter}</button>`;
         }
         html += '</div>';
         return html;
@@ -1133,7 +1133,7 @@ class WMCTrainer {
     renderArrowGrid() {
         let html = '<div class="arrow-grid">';
         for (const arrow of this.arrows) {
-            html += `<button class="arrow-button" onclick="app.addToRecall('${arrow}')">${arrow}</button>`;
+            html += `<button class="arrow-button" onclick="window.app && window.app.addToRecall('${arrow}')">${arrow}</button>`;
         }
         html += '</div>';
         return html;
