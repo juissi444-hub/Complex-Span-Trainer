@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Working Memory Capacity Trainer</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="screen active">
+            <div class="container">
+                <h1>Working Memory Capacity Trainer</h1>
+                <p class="subtitle">Based on validated cognitive research</p>
+
+                <div class="info-box">
+                    <h2>About This App</h2>
+                    <p>This training application is based on peer-reviewed research on working memory capacity (WMC) measurement using Complex Span Tasks.</p>
+                    <p>You will complete three different tasks that measure your ability to maintain information while processing distractions:</p>
+                    <ul>
+                        <li><strong>Operation Span:</strong> Solve math equations while remembering letters</li>
+                        <li><strong>Symmetry Span:</strong> Judge symmetry while remembering locations</li>
+                        <li><strong>Rotation Span:</strong> Judge letter rotations while remembering arrows</li>
+                    </ul>
+                </div>
+
+                <div class="demographics">
+                    <h3>Participant Information</h3>
+                    <label>
+                        Age:
+                        <input type="number" id="age" min="17" max="35" value="25">
+                    </label>
+                    <label>
+                        Gender:
+                        <select id="gender">
+                            <option value="">Prefer not to say</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </label>
+                    <label>
+                        Education:
+                        <select id="education">
+                            <option value="college">College Student</option>
+                            <option value="non-college">Non-College</option>
+                            <option value="graduate">Graduate Student</option>
+                        </select>
+                    </label>
+                </div>
+
+                <button class="btn-primary" onclick="app.selectTask()">Begin Training</button>
+            </div>
+        </div>
+
+        <!-- Task Selection Screen -->
+        <div id="task-selection" class="screen">
+            <div class="container">
+                <h1>Select a Task</h1>
+                <div class="task-grid">
+                    <div class="task-card" onclick="app.startTask('operation')">
+                        <h3>Operation Span</h3>
+                        <p>Verify math equations while remembering letters</p>
+                        <div class="task-icon">+×</div>
+                        <span class="difficulty">Difficulty: Medium</span>
+                    </div>
+                    <div class="task-card" onclick="app.startTask('symmetry')">
+                        <h3>Symmetry Span</h3>
+                        <p>Judge symmetry while remembering grid positions</p>
+                        <div class="task-icon">⬛</div>
+                        <span class="difficulty">Difficulty: Medium-Hard</span>
+                    </div>
+                    <div class="task-card" onclick="app.startTask('rotation')">
+                        <h3>Rotation Span</h3>
+                        <p>Identify rotated letters while remembering arrows</p>
+                        <div class="task-icon">↻</div>
+                        <span class="difficulty">Difficulty: Hard</span>
+                    </div>
+                </div>
+                <button class="btn-secondary" onclick="app.viewResults()">View Results</button>
+            </div>
+        </div>
+
+        <!-- Instructions Screen -->
+        <div id="instructions" class="screen">
+            <div class="container">
+                <h2 id="task-title"></h2>
+                <div id="instructions-content"></div>
+                <button class="btn-primary" onclick="app.startPractice()">Start Practice</button>
+                <button class="btn-secondary" onclick="app.selectTask()">Back</button>
+            </div>
+        </div>
+
+        <!-- Practice Screen -->
+        <div id="practice" class="screen">
+            <div class="container">
+                <h2>Practice: <span id="practice-phase"></span></h2>
+                <div id="practice-content"></div>
+            </div>
+        </div>
+
+        <!-- Main Task Screen -->
+        <div id="task" class="screen">
+            <div class="container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress"></div>
+                </div>
+                <div class="trial-info">
+                    <span>Trial <span id="current-trial">1</span> of <span id="total-trials">15</span></span>
+                    <span>Set Size: <span id="set-size">3</span></span>
+                </div>
+                <div id="task-content"></div>
+            </div>
+        </div>
+
+        <!-- Recall Screen -->
+        <div id="recall" class="screen">
+            <div class="container">
+                <h2>Recall Items in Order</h2>
+                <div id="recall-content"></div>
+                <div class="recall-buttons">
+                    <button class="btn-warning" onclick="app.clearRecall()">Clear</button>
+                    <button class="btn-primary" onclick="app.submitRecall()">Submit</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feedback Screen -->
+        <div id="feedback" class="screen">
+            <div class="container">
+                <h2>Trial Complete</h2>
+                <div id="feedback-content"></div>
+                <button class="btn-primary" onclick="app.nextTrial()">Continue</button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results" class="screen">
+            <div class="container">
+                <h1>Your Results</h1>
+                <div id="results-content"></div>
+                <div class="results-actions">
+                    <button class="btn-primary" onclick="app.selectTask()">Try Another Task</button>
+                    <button class="btn-secondary" onclick="app.exportResults()">Export Results</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
