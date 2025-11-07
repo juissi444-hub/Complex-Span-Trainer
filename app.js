@@ -1155,15 +1155,19 @@ let app = null;
 
 function initializeApp() {
     if (!app) {
+        console.log('Initializing WMC Trainer...');
         app = new WMCTrainer();
         // Make app globally accessible for onclick handlers
         window.app = app;
+        console.log('App initialized and available globally:', window.app);
     }
 }
 
 if (document.readyState === 'loading') {
+    console.log('Waiting for DOM...');
     document.addEventListener('DOMContentLoaded', initializeApp);
 } else {
     // DOM already loaded
+    console.log('DOM already loaded, initializing...');
     initializeApp();
 }
