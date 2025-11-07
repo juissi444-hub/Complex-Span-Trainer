@@ -397,8 +397,8 @@ button {
 }
 
 .memory-cell.selected {
-    background: var(--primary-color);
-    border-color: var(--primary-dark);
+    background: rgba(100, 116, 139, 0.2);
+    border-color: var(--secondary-color);
 }
 
 .memory-cell.correct {
