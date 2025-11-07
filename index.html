@@ -2,11 +2,24 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <title>Working Memory Capacity Trainer</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <!-- Mobile Navigation Header -->
+    <header id="mobile-header" class="mobile-header">
+        <button class="nav-button back-button" onclick="app.goBack()" id="back-btn" style="display: none;">
+            ← Back
+        </button>
+        <span class="app-title">WMC Trainer</span>
+        <button class="nav-button help-button" onclick="app.showHelp()" id="help-btn">
+            ?
+        </button>
+    </header>
+
     <div id="app">
         <!-- Welcome Screen -->
         <div id="welcome-screen" class="screen active">
@@ -148,6 +161,60 @@
         </div>
     </div>
 
+    <!-- Help Modal -->
+    <div id="help-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Help & Information</h2>
+                <button class="modal-close" onclick="app.closeHelp()">×</button>
+            </div>
+            <div class="modal-body">
+                <h3>Quick Tips</h3>
+                <ul>
+                    <li><strong>Storage:</strong> Remember items in the order shown</li>
+                    <li><strong>Processing:</strong> Must maintain 85% accuracy</li>
+                    <li><strong>Time Limit:</strong> Based on your practice speed</li>
+                    <li><strong>Trials:</strong> 15-21 trials per task</li>
+                </ul>
+
+                <h3>Navigation</h3>
+                <ul>
+                    <li>Use the <strong>← Back</strong> button to return</li>
+                    <li>Tap <strong>?</strong> for help anytime</li>
+                    <li>Your progress is automatically saved</li>
+                </ul>
+
+                <h3>Mobile Tips</h3>
+                <ul>
+                    <li>Use in portrait mode for best experience</li>
+                    <li>Ensure stable internet connection for initial load</li>
+                    <li>Works offline after first visit</li>
+                    <li>Tap buttons firmly for accurate responses</li>
+                </ul>
+
+                <h3>Contact</h3>
+                <p>For issues or questions, please refer to the documentation or contact support.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-primary" onclick="app.closeHelp()">Got It</button>
+            </div>
+        </div>
+    </div>
+
     <script src="app.js"></script>
+    <script>
+        // Register service worker for offline capability
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registered:', registration);
+                    })
+                    .catch(err => {
+                        console.log('ServiceWorker registration failed:', err);
+                    });
+            });
+        }
+    </script>
 </body>
 </html>
