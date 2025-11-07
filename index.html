@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <title>Working Memory Capacity Trainer</title>
-    <link rel="stylesheet" href="styles.css?v=7">
+    <link rel="stylesheet" href="styles.css?v=8">
 </head>
 <body>
     <!-- Mobile Navigation Header -->
@@ -205,9 +205,51 @@
         </div>
     </div>
 
-    <script src="app.js?v=7"></script>
+    <script src="app.js?v=8"></script>
     <script>
-        console.log('WMC Trainer v7 - MOBILE EXACTLY MATCHES DESKTOP - All grids and displays identical');
+        console.log('WMC Trainer v8 - AGGRESSIVE CACHE CLEARING - Forces reload to bypass old SW');
+
+        // FORCE CLEAR OLD CACHES AND SERVICE WORKER
+        (async function forceClearOldVersions() {
+            try {
+                let clearedSomething = false;
+
+                // Clear all old caches
+                const cacheNames = await caches.keys();
+                console.log('Found caches:', cacheNames);
+                for (const cacheName of cacheNames) {
+                    if (cacheName !== 'wmc-trainer-v5') {
+                        console.log('Deleting old cache:', cacheName);
+                        await caches.delete(cacheName);
+                        clearedSomething = true;
+                    }
+                }
+
+                // Unregister all service workers to force fresh registration
+                if ('serviceWorker' in navigator) {
+                    const registrations = await navigator.serviceWorker.getRegistrations();
+                    if (registrations.length > 0) {
+                        for (const registration of registrations) {
+                            console.log('Unregistering service worker...');
+                            await registration.unregister();
+                        }
+                        clearedSomething = true;
+                    }
+                }
+
+                // Force reload to get fresh version if we cleared anything
+                if (clearedSomething && !sessionStorage.getItem('reloaded-v7')) {
+                    console.log('Old caches/SW cleared, reloading page...');
+                    sessionStorage.setItem('reloaded-v7', 'true');
+                    setTimeout(() => {
+                        window.location.reload(true);
+                    }, 500);
+                    return;
+                }
+            } catch (error) {
+                console.error('Error clearing caches:', error);
+            }
+        })();
 
         // Register service worker for offline capability
         if ('serviceWorker' in navigator) {
