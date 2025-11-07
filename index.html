@@ -6,7 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <title>Working Memory Capacity Trainer</title>
-    <link rel="stylesheet" href="styles.css?v=5">
+    <link rel="stylesheet" href="styles.css?v=6">
 </head>
 <body>
     <!-- Mobile Navigation Header -->
@@ -205,9 +205,9 @@
         </div>
     </div>
 
-    <script src="app.js?v=5"></script>
+    <script src="app.js?v=6"></script>
     <script>
-        console.log('WMC Trainer v5 - SUBMIT BUG FIXED - currentResponses now initialized');
+        console.log('WMC Trainer v6 - SERVICE WORKER CACHE UPDATED - Network-first for JS/CSS');
 
         // Register service worker for offline capability
         if ('serviceWorker' in navigator) {
@@ -215,10 +215,26 @@
                 navigator.serviceWorker.register('/sw.js')
                     .then(registration => {
                         console.log('ServiceWorker registered:', registration);
+
+                        // Check for updates every 30 seconds
+                        setInterval(() => {
+                            registration.update();
+                        }, 30000);
                     })
                     .catch(err => {
                         console.log('ServiceWorker registration failed:', err);
                     });
+            });
+
+            // Listen for cache update messages from service worker
+            navigator.serviceWorker.addEventListener('message', (event) => {
+                if (event.data && event.data.type === 'CACHE_UPDATED') {
+                    console.log('New version available! Reloading...', event.data.version);
+                    // Auto-reload to get new version
+                    setTimeout(() => {
+                        window.location.reload(true);
+                    }, 1000);
+                }
             });
         }
 
