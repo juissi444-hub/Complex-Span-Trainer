@@ -617,6 +617,9 @@ class WMCTrainer {
                     setTimeout(() => btn.classList.remove('selected'), 200);
                 }
             });
+        } else if (this.currentTask === 'symmetry') {
+            // Mark the memory cell as selected
+            this.updateMemoryGridDisplay();
         } else if (this.currentTask === 'rotation') {
             // Find and highlight the arrow button
             const buttons = document.querySelectorAll('.arrow-button');
@@ -626,6 +629,31 @@ class WMCTrainer {
                     setTimeout(() => btn.classList.remove('selected'), 200);
                 }
             });
+        }
+    }
+
+    // Update memory grid display with selected cells
+    updateMemoryGridDisplay() {
+        const cells = document.querySelectorAll('.memory-cell');
+        let cellIndex = 0;
+
+        // Reset all cells first
+        cells.forEach(cell => {
+            cell.classList.remove('selected');
+        });
+
+        // Mark selected cells
+        for (let row = 0; row < 4; row++) {
+            for (let col = 0; col < 4; col++) {
+                const isSelected = this.currentRecall.some(item =>
+                    item.row === row && item.col === col
+                );
+
+                if (isSelected) {
+                    cells[cellIndex].classList.add('selected');
+                }
+                cellIndex++;
+            }
         }
     }
 
@@ -662,6 +690,11 @@ class WMCTrainer {
         document.querySelectorAll('.letter-button, .memory-cell, .arrow-button').forEach(btn => {
             btn.classList.remove('selected');
         });
+
+        // Update memory grid if on symmetry task
+        if (this.currentTask === 'symmetry') {
+            this.updateMemoryGridDisplay();
+        }
     }
 
     // Submit recall
@@ -1118,13 +1151,19 @@ class WMCTrainer {
 }
 
 // Initialize app when DOM is ready
-let app;
+let app = null;
+
+function initializeApp() {
+    if (!app) {
+        app = new WMCTrainer();
+        // Make app globally accessible for onclick handlers
+        window.app = app;
+    }
+}
 
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-        app = new WMCTrainer();
-    });
+    document.addEventListener('DOMContentLoaded', initializeApp);
 } else {
     // DOM already loaded
-    app = new WMCTrainer();
+    initializeApp();
 }
