@@ -19,6 +19,7 @@ class WMCTrainer {
         // Current trial data
         this.currentItems = [];
         this.currentRecall = [];
+        this.currentResponses = [];
         this.processingErrors = 0;
         this.speedErrors = 0;
 
@@ -148,6 +149,9 @@ class WMCTrainer {
         this.currentTrial = 0;
         this.trials = [];
         this.responses = [];
+        this.currentItems = [];
+        this.currentRecall = [];
+        this.currentResponses = [];
         this.processingErrors = 0;
         this.speedErrors = 0;
         this.practicePhase = 0;
@@ -183,6 +187,9 @@ class WMCTrainer {
         this.currentTask = taskType;
         this.currentTrial = 0;
         this.responses = [];
+        this.currentItems = [];
+        this.currentRecall = [];
+        this.currentResponses = [];
         this.processingErrors = 0;
         this.speedErrors = 0;
 
@@ -719,6 +726,13 @@ class WMCTrainer {
             }
 
             console.log('Building trial data...');
+
+            // Safety check: ensure arrays exist
+            if (!this.currentResponses) {
+                console.warn('currentResponses was undefined, initializing to empty array');
+                this.currentResponses = [];
+            }
+
             // Calculate score for this trial
             const trialData = {
                 setSize: this.currentSetSize,
