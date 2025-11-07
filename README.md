@@ -17,17 +17,17 @@ This application is based on the following seminal research studies:
 ### Three Validated Tasks
 
 1. **Operation Span** - Solve math equations while remembering letters
-   - Set sizes: 3-9 items (extended range for better discrimination at high ability levels)
+   - Set sizes: 3-7 items (3 trials each = 15 trials, 75 total items)
    - Processing task: Verify arithmetic equations like "(2 × 3) + 1 = 7"
    - Storage task: Remember letters in serial order
 
 2. **Symmetry Span** - Judge symmetry while remembering grid locations
-   - Set sizes: 2-7 items
+   - Set sizes: 2-5 items (2 trials each = 8 trials, 28 total items)
    - Processing task: Determine if 8×8 grid patterns are vertically symmetrical
    - Storage task: Remember locations in a 4×4 grid
 
 3. **Rotation Span** - Identify rotated letters while remembering arrows
-   - Set sizes: 2-7 items
+   - Set sizes: 2-5 items (3 trials each = 12 trials, 42 total items)
    - Processing task: Determine if rotated letters (F, G, J, L, P, R) are normal or mirror-reversed
    - Storage task: Remember arrow directions
 
@@ -74,9 +74,11 @@ The processing component disrupts rehearsal and engages executive attention, mak
 
 **From Draheim et al. (2017):**
 - Standard Operation Span (set sizes 3-7) has low difficulty (θ ≈ -1.1), making it unsuitable for above-average samples
-- Adding larger set sizes (8-9) improves discrimination at higher ability levels
+- Adding larger set sizes (8-9) improves discrimination at higher ability levels (not implemented in this version)
 - Spatial tasks (Symmetry, Rotation Span) outperform Operation Span in discriminating high-ability individuals
 - Smallest set sizes (2-3) can be removed without affecting predictive validity
+
+**Note:** This implementation uses the standard Redick et al. (2012) protocol to ensure scores are comparable with normative data.
 
 **From Conway et al. (2005):**
 - Partial-credit unit (PCU) scoring is superior to absolute scoring
@@ -135,7 +137,7 @@ Percentiles are calculated using normative data from Redick et al. (2012):
 1. **Read Instructions**: Carefully read the task instructions
 2. **Complete Practice**: Practice each component (storage, processing, combined)
 3. **Set Time Limit**: Your processing speed during practice sets your time limit
-4. **Complete Main Task**: 15-21 trials depending on task
+4. **Complete Main Task**: 8-15 trials (Symmetry: 8, Rotation: 12, Operation: 15)
 5. **Review Results**: See your scores and percentile rankings
 6. **Export Data** (optional): Download your results as JSON
 

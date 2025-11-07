@@ -423,19 +423,24 @@ class WMCTrainer {
 
     // Start main task
     startMainTask() {
-        // Generate trials based on research recommendations
-        // Using set sizes 3-7 for operation/reading, 2-6 for symmetry/rotation
-        // Extended set sizes (8-9 for operation, 6-7 for spatial) for better discrimination
+        // Generate trials based on Redick et al. (2012) specifications
+        // This matches the exact protocol used to collect normative data (N=6,274)
 
         this.trials = [];
         let setSizes;
 
         if (this.currentTask === 'operation' || this.currentTask === 'reading') {
-            // Set sizes 3-9, three trials each, randomized
-            setSizes = [3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7, 8, 8, 8, 9, 9, 9];
-        } else {
-            // Set sizes 2-7, three trials each, randomized
-            setSizes = [2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7];
+            // Operation/Reading Span: Set sizes 3-7, three trials each
+            // Total: 15 trials, 75 total items
+            setSizes = [3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7];
+        } else if (this.currentTask === 'symmetry') {
+            // Symmetry Span: Set sizes 2-5, two trials each
+            // Total: 8 trials, 28 total items
+            setSizes = [2, 2, 3, 3, 4, 4, 5, 5];
+        } else if (this.currentTask === 'rotation') {
+            // Rotation Span: Set sizes 2-5, three trials each
+            // Total: 12 trials, 42 total items
+            setSizes = [2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5];
         }
 
         // Shuffle set sizes for randomized presentation
