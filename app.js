@@ -122,14 +122,20 @@ class WMCTrainer {
 
     // Go back in navigation
     goBack() {
+        console.log('=== GO BACK ===');
+        console.log(`Current screen: ${this.currentScreen}`);
+        console.log(`Screen history: [${this.screenHistory.join(', ')}]`);
+
         if (this.screenHistory.length > 1) {
             // Remove current screen
             this.screenHistory.pop();
             // Get previous screen
             const previousScreen = this.screenHistory[this.screenHistory.length - 1];
+            console.log(`Going back to: ${previousScreen}`);
             this.showScreen(previousScreen, false);
         } else {
-            // Default to task selection or welcome
+            // Default to task selection
+            console.log('No history, going to task selection');
             this.selectTask();
         }
     }
