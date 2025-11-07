@@ -366,18 +366,18 @@ button {
 /* Grid for Symmetry Task */
 .symmetry-grid {
     display: grid;
-    grid-template-columns: repeat(8, minmax(30px, 40px));
+    grid-template-columns: repeat(8, 1fr);
     gap: 2px;
     margin: 20px auto;
-    width: fit-content;
-    max-width: min(100%, 350px);
+    max-width: 350px;
+    width: 100%;
+    padding: 0 5px;
 }
 
 .symmetry-cell {
-    width: 100%;
     aspect-ratio: 1;
-    max-width: 40px;
     border: 1px solid var(--border-color);
+    background: transparent;
 }
 
 .symmetry-cell.filled {
@@ -992,18 +992,18 @@ button {
     /* Symmetry grid for mobile - SAME AS DESKTOP */
     .symmetry-grid {
         display: grid;
-        grid-template-columns: repeat(8, minmax(30px, 40px));
+        grid-template-columns: repeat(8, 1fr);
         gap: 2px;
-        margin: 20px auto;
-        width: fit-content;
-        max-width: min(95vw, 350px);
+        margin: 15px auto;
+        max-width: calc(100vw - 20px);
+        width: 100%;
+        padding: 0 5px;
     }
 
     .symmetry-cell {
-        width: 100%;
         aspect-ratio: 1;
-        max-width: 40px;
         border: 1px solid var(--border-color);
+        background: transparent;
     }
 
     .symmetry-cell.filled {
