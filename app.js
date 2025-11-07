@@ -37,6 +37,15 @@ class WMCTrainer {
 
     // Initialize mobile-specific features
     initMobileFeatures() {
+        // Wait for DOM to be ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => this.setupMobileFeatures());
+        } else {
+            this.setupMobileFeatures();
+        }
+    }
+
+    setupMobileFeatures() {
         // Prevent pull-to-refresh on mobile
         document.body.addEventListener('touchmove', (e) => {
             if (e.target === document.body) {
@@ -79,11 +88,25 @@ class WMCTrainer {
     // Update back button visibility
     updateBackButton() {
         const backBtn = document.getElementById('back-btn');
-        // Show back button only if we have history and not on welcome screen
-        if (this.screenHistory.length > 1 && this.currentScreen !== 'welcome-screen') {
+        const homeBtn = document.getElementById('home-btn');
+
+        if (!backBtn || !homeBtn) return; // DOM not ready yet
+
+        // Show back button only if we have history and not on welcome or task-selection screen
+        if (this.screenHistory.length > 1 &&
+            this.currentScreen !== 'welcome-screen' &&
+            this.currentScreen !== 'task-selection') {
             backBtn.style.display = 'block';
+            homeBtn.style.display = 'none'; // Hide home when back is shown
         } else {
             backBtn.style.display = 'none';
+            // Show home button if not on welcome or task-selection
+            if (this.currentScreen !== 'welcome-screen' &&
+                this.currentScreen !== 'task-selection') {
+                homeBtn.style.display = 'flex';
+            } else {
+                homeBtn.style.display = 'none';
+            }
         }
     }
 
@@ -109,6 +132,29 @@ class WMCTrainer {
     // Close help modal
     closeHelp() {
         document.getElementById('help-modal').classList.remove('active');
+    }
+
+    // Return to main menu (task selection)
+    returnToMenu(confirm = true) {
+        // If in middle of task, confirm first
+        if (confirm && this.currentTask && this.currentTrial > 0 && this.currentTrial < this.trials.length) {
+            if (!window.confirm('Are you sure? Your current progress will be lost.')) {
+                return;
+            }
+        }
+
+        // Reset task state
+        this.currentTask = null;
+        this.currentTrial = 0;
+        this.trials = [];
+        this.responses = [];
+        this.processingErrors = 0;
+        this.speedErrors = 0;
+        this.practicePhase = 0;
+
+        // Clear history and go to task selection
+        this.screenHistory = ['task-selection'];
+        this.showScreen('task-selection', false);
     }
 
     // Task Selection
@@ -238,6 +284,7 @@ class WMCTrainer {
             <div class="info-box">
                 <p>Practice remembering items. You'll see 3 items to remember.</p>
                 <button class="btn-primary" onclick="app.runStoragePractice()">Begin Storage Practice</button>
+                <button class="btn-secondary" onclick="app.returnToMenu()">Return to Main Menu</button>
             </div>
         `;
     }
@@ -292,6 +339,7 @@ class WMCTrainer {
                 <p>Practice the processing task. Respond as quickly and accurately as possible.</p>
                 <p>We'll use your speed to set a time limit for the main task.</p>
                 <button class="btn-primary" onclick="app.runProcessingPractice()">Begin Processing Practice</button>
+                <button class="btn-secondary" onclick="app.returnToMenu()">Return to Main Menu</button>
             </div>
         `;
     }
@@ -1069,5 +1117,14 @@ class WMCTrainer {
     }
 }
 
-// Initialize app
-const app = new WMCTrainer();
+// Initialize app when DOM is ready
+let app;
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        app = new WMCTrainer();
+    });
+} else {
+    // DOM already loaded
+    app = new WMCTrainer();
+}
