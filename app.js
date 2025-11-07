@@ -699,13 +699,14 @@ class WMCTrainer {
 
     // Submit recall
     submitRecall() {
+        console.log('Submit recall called');
         this.hapticFeedback();
 
         // Ensure we have at least one item recalled
         if (this.currentRecall.length === 0) {
-            if (confirm('You haven\'t selected any items. Submit empty response?')) {
-                // Continue with empty response
-            } else {
+            const confirmSubmit = confirm('You haven\'t selected any items. Submit empty response?');
+            console.log('Empty recall, user confirmed:', confirmSubmit);
+            if (!confirmSubmit) {
                 return;
             }
         }
@@ -719,6 +720,7 @@ class WMCTrainer {
             score: this.calculateTrialScore()
         };
 
+        console.log('Trial data:', trialData);
         this.responses.push(trialData);
         this.showFeedback(trialData);
     }
