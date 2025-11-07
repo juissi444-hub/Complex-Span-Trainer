@@ -1,5 +1,5 @@
 // Service Worker for offline capability
-const CACHE_NAME = 'wmc-trainer-v6';
+const CACHE_NAME = 'wmc-trainer-v7';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -9,11 +9,11 @@ const urlsToCache = [
 
 // Install event - cache resources
 self.addEventListener('install', (event) => {
-  console.log('Service Worker v6 installing...');
+  console.log('Service Worker v7 installing...');
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
-        console.log('Opened cache v6');
+        console.log('Opened cache v7');
         return cache.addAll(urlsToCache);
       })
   );
@@ -54,7 +54,7 @@ self.addEventListener('fetch', (event) => {
 
 // Activate event - clean up old caches
 self.addEventListener('activate', (event) => {
-  console.log('Service Worker v6 activating...');
+  console.log('Service Worker v7 activating...');
   const cacheWhitelist = [CACHE_NAME];
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -67,13 +67,13 @@ self.addEventListener('activate', (event) => {
         })
       );
     }).then(() => {
-      console.log('Old caches deleted, v6 now active');
+      console.log('Old caches deleted, v7 now active');
       // Force all clients to reload to get new code
       return self.clients.matchAll().then((clients) => {
         clients.forEach(client => {
           client.postMessage({
             type: 'CACHE_UPDATED',
-            version: 'v6'
+            version: 'v7'
           });
         });
       });

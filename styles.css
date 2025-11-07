@@ -989,13 +989,12 @@ button {
         justify-content: center;
     }
 
-    /* Symmetry grid for mobile - RESPONSIVE */
+    /* Symmetry grid for mobile - SAME AS DESKTOP */
     .symmetry-grid {
         display: grid;
-        grid-template-columns: repeat(8, 1fr);
+        grid-template-columns: repeat(8, minmax(30px, 40px));
         gap: 2px;
-        margin: 15px auto;
-        max-width: 100%;
+        margin: 20px auto;
         width: fit-content;
         max-width: min(95vw, 350px);
     }
@@ -1003,8 +1002,7 @@ button {
     .symmetry-cell {
         width: 100%;
         aspect-ratio: 1;
-        max-width: 42px;
-        max-height: 42px;
+        max-width: 40px;
         border: 1px solid var(--border-color);
     }
 
@@ -1103,12 +1101,7 @@ button {
     }
 
     .symmetry-grid {
-        max-width: min(95vw, 320px);
-    }
-
-    .symmetry-cell {
-        max-width: 38px;
-        max-height: 38px;
+        max-width: min(95vw, 350px);
     }
 
     .letter-button {
@@ -1188,13 +1181,7 @@ button {
     }
 
     .symmetry-grid {
-        max-width: min(98vw, 300px);
-        gap: 1px;
-    }
-
-    .symmetry-cell {
-        max-width: 36px;
-        max-height: 36px;
+        max-width: min(98vw, 350px);
     }
 
     .response-button {
@@ -1275,12 +1262,7 @@ button {
     }
 
     .symmetry-grid {
-        max-width: min(95vw, 320px);
-    }
-
-    .symmetry-cell {
-        max-width: 38px;
-        max-height: 38px;
+        max-width: min(95vw, 350px);
     }
 
     .rotated-letter {
