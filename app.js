@@ -26,19 +26,110 @@ class WMCTrainer {
         this.letters = ['F', 'H', 'J', 'K', 'L', 'N', 'P', 'Q', 'R', 'S', 'T', 'Y'];
         this.arrows = ['↑', '↗', '→', '↘', '↓', '↙', '←', '↖'];
         this.rotationLetters = ['F', 'G', 'J', 'L', 'P', 'R'];
+
+        // Navigation history for back button
+        this.screenHistory = ['welcome-screen'];
+        this.currentScreen = 'welcome-screen';
+
+        // Initialize mobile features
+        this.initMobileFeatures();
+    }
+
+    // Initialize mobile-specific features
+    initMobileFeatures() {
+        // Prevent pull-to-refresh on mobile
+        document.body.addEventListener('touchmove', (e) => {
+            if (e.target === document.body) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        // Prevent double-tap zoom
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', (e) => {
+            const now = Date.now();
+            if (now - lastTouchEnd <= 300) {
+                e.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+
+        // Update back button visibility
+        this.updateBackButton();
     }
 
     // Screen Management
-    showScreen(screenId) {
+    showScreen(screenId, addToHistory = true) {
         document.querySelectorAll('.screen').forEach(screen => {
             screen.classList.remove('active');
         });
         document.getElementById(screenId).classList.add('active');
+
+        // Update navigation history
+        if (addToHistory && screenId !== this.currentScreen) {
+            this.screenHistory.push(screenId);
+        }
+        this.currentScreen = screenId;
+        this.updateBackButton();
+
+        // Scroll to top
+        window.scrollTo(0, 0);
+    }
+
+    // Update back button visibility
+    updateBackButton() {
+        const backBtn = document.getElementById('back-btn');
+        // Show back button only if we have history and not on welcome screen
+        if (this.screenHistory.length > 1 && this.currentScreen !== 'welcome-screen') {
+            backBtn.style.display = 'block';
+        } else {
+            backBtn.style.display = 'none';
+        }
+    }
+
+    // Go back in navigation
+    goBack() {
+        if (this.screenHistory.length > 1) {
+            // Remove current screen
+            this.screenHistory.pop();
+            // Get previous screen
+            const previousScreen = this.screenHistory[this.screenHistory.length - 1];
+            this.showScreen(previousScreen, false);
+        } else {
+            // Default to task selection or welcome
+            this.selectTask();
+        }
+    }
+
+    // Show help modal
+    showHelp() {
+        document.getElementById('help-modal').classList.add('active');
+    }
+
+    // Close help modal
+    closeHelp() {
+        document.getElementById('help-modal').classList.remove('active');
     }
 
     // Task Selection
     selectTask() {
+        // Collect demographics if coming from welcome screen
+        if (this.currentScreen === 'welcome-screen') {
+            this.demographics = {
+                age: document.getElementById('age')?.value || null,
+                gender: document.getElementById('gender')?.value || null,
+                education: document.getElementById('education')?.value || null,
+                timestamp: new Date().toISOString()
+            };
+        }
         this.showScreen('task-selection');
+    }
+
+    // Add haptic feedback for mobile (if supported)
+    hapticFeedback() {
+        if (navigator.vibrate) {
+            navigator.vibrate(10);
+        }
     }
 
     // Start a specific task
@@ -397,6 +488,8 @@ class WMCTrainer {
 
     // Handle processing response
     processResponse(response, correct) {
+        this.hapticFeedback();
+
         const rt = Date.now() - this.trialStartTime;
         const isCorrect = (response === correct);
 
@@ -462,8 +555,30 @@ class WMCTrainer {
 
     // Add item to recall
     addToRecall(item) {
+        this.hapticFeedback();
         this.currentRecall.push(item);
         this.updateRecallDisplay();
+
+        // Visual feedback - highlight selected button
+        if (this.currentTask === 'operation' || this.currentTask === 'reading') {
+            // Find and highlight the letter button
+            const buttons = document.querySelectorAll('.letter-button');
+            buttons.forEach(btn => {
+                if (btn.textContent === item) {
+                    btn.classList.add('selected');
+                    setTimeout(() => btn.classList.remove('selected'), 200);
+                }
+            });
+        } else if (this.currentTask === 'rotation') {
+            // Find and highlight the arrow button
+            const buttons = document.querySelectorAll('.arrow-button');
+            buttons.forEach(btn => {
+                if (btn.textContent === item) {
+                    btn.classList.add('selected');
+                    setTimeout(() => btn.classList.remove('selected'), 200);
+                }
+            });
+        }
     }
 
     // Update recall display
@@ -491,6 +606,7 @@ class WMCTrainer {
 
     // Clear recall
     clearRecall() {
+        this.hapticFeedback();
         this.currentRecall = [];
         this.updateRecallDisplay();
 
@@ -502,6 +618,17 @@ class WMCTrainer {
 
     // Submit recall
     submitRecall() {
+        this.hapticFeedback();
+
+        // Ensure we have at least one item recalled
+        if (this.currentRecall.length === 0) {
+            if (confirm('You haven\'t selected any items. Submit empty response?')) {
+                // Continue with empty response
+            } else {
+                return;
+            }
+        }
+
         // Calculate score for this trial
         const trialData = {
             setSize: this.currentSetSize,

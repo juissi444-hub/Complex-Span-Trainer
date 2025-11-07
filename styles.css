@@ -24,6 +24,10 @@ body {
     min-height: 100vh;
     color: var(--text-color);
     line-height: 1.6;
+    padding-top: 60px; /* Space for fixed mobile header */
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    touch-action: manipulation;
 }
 
 #app {
@@ -134,16 +138,72 @@ h3 {
     border-color: var(--primary-color);
 }
 
+/* Mobile Navigation Header */
+.mobile-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: var(--card-bg);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 15px;
+    z-index: 1000;
+}
+
+.app-title {
+    font-weight: 700;
+    font-size: 1.2em;
+    color: var(--primary-color);
+}
+
+.nav-button {
+    background: transparent;
+    border: none;
+    font-size: 1.1em;
+    font-weight: 600;
+    color: var(--primary-color);
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background 0.3s;
+    min-width: 60px;
+    min-height: 44px;
+}
+
+.nav-button:active {
+    background: var(--bg-color);
+}
+
+.help-button {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    font-size: 1.5em;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
 /* Buttons */
 button {
     cursor: pointer;
-    font-size: 1em;
-    padding: 12px 30px;
+    font-size: 1.1em;
+    padding: 16px 32px;
     border: none;
-    border-radius: 8px;
+    border-radius: 12px;
     font-weight: 600;
     transition: all 0.3s;
     margin: 10px 5px;
+    min-height: 48px;
+    min-width: 120px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
 }
 
 .btn-primary {
@@ -563,46 +623,403 @@ button {
     100% { transform: rotate(360deg); }
 }
 
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 2000;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-content {
+    background: var(--card-bg);
+    border-radius: 16px;
+    max-width: 600px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+.modal-header {
+    padding: 20px 25px;
+    border-bottom: 2px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h2 {
+    margin: 0;
+}
+
+.modal-close {
+    background: transparent;
+    border: none;
+    font-size: 2em;
+    color: var(--secondary-color);
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    min-width: auto;
+    min-height: auto;
+    padding: 0;
+    margin: 0;
+}
+
+.modal-close:hover {
+    background: var(--bg-color);
+}
+
+.modal-body {
+    padding: 25px;
+}
+
+.modal-body h3 {
+    color: var(--primary-color);
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+.modal-body ul {
+    margin-left: 20px;
+}
+
+.modal-body li {
+    margin: 10px 0;
+}
+
+.modal-footer {
+    padding: 20px 25px;
+    border-top: 2px solid var(--border-color);
+    text-align: center;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
+    body {
+        padding-top: 60px;
+    }
+
     .container {
-        padding: 20px;
+        padding: 15px;
+        border-radius: 0;
+        min-height: calc(100vh - 60px);
     }
 
     h1 {
-        font-size: 1.8em;
+        font-size: 1.6em;
+        margin-bottom: 15px;
     }
 
     h2 {
-        font-size: 1.4em;
+        font-size: 1.3em;
+        margin-bottom: 15px;
+    }
+
+    h3 {
+        font-size: 1.1em;
+    }
+
+    .info-box, .demographics {
+        padding: 15px;
+        margin: 20px 0;
     }
 
     .task-grid {
         grid-template-columns: 1fr;
+        gap: 15px;
     }
 
+    .task-card {
+        padding: 20px;
+    }
+
+    /* Larger touch targets for mobile */
     .letter-grid {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+        padding: 10px;
+    }
+
+    .letter-button {
+        padding: 20px 10px;
+        font-size: 1.8em;
+        min-height: 70px;
+        border-width: 3px;
     }
 
     .arrow-grid {
-        grid-template-columns: repeat(2, 80px);
-        gap: 10px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        padding: 10px;
     }
 
     .arrow-button {
-        width: 80px;
-        height: 80px;
+        width: 100%;
+        height: 90px;
+        font-size: 2.5em;
+        border-width: 3px;
+    }
+
+    .memory-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+        padding: 10px;
+    }
+
+    .memory-cell {
+        width: 100%;
+        height: 0;
+        padding-bottom: 100%;
+        position: relative;
+        border-width: 3px;
+    }
+
+    /* Response buttons for mobile */
+    .response-buttons {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .response-button {
+        width: 100%;
+        font-size: 1.3em;
+        padding: 20px;
+        min-height: 60px;
     }
 
     button {
+        font-size: 1em;
+        padding: 14px 24px;
+        margin: 8px 0;
         width: 100%;
-        margin: 5px 0;
     }
 
-    .response-buttons {
-        flex-direction: column;
+    .recall-buttons {
+        flex-direction: row;
+        gap: 10px;
     }
+
+    .recall-buttons button {
+        flex: 1;
+    }
+
+    /* Equation display */
+    .equation {
+        font-size: 1.8em;
+        margin: 15px 0;
+    }
+
+    .storage-item {
+        font-size: 3em;
+        margin: 30px 0;
+    }
+
+    .arrow-display {
+        font-size: 4em;
+        margin: 30px 0;
+    }
+
+    .rotated-letter {
+        font-size: 4em;
+        margin: 30px 0;
+    }
+
+    /* Symmetry grid for mobile */
+    .symmetry-grid {
+        grid-template-columns: repeat(8, 1fr);
+        gap: 1px;
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .symmetry-cell {
+        width: 100%;
+        height: 0;
+        padding-bottom: 100%;
+        border-width: 1px;
+    }
+
+    /* Results for mobile */
+    .results-summary {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .result-card {
+        padding: 20px;
+    }
+
+    .score-display {
+        font-size: 2em;
+    }
+
+    .feedback-stats {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .stat-value {
+        font-size: 2em;
+    }
+
+    /* Modal adjustments for mobile */
+    .modal.active {
+        padding: 10px;
+        align-items: flex-start;
+        padding-top: 60px;
+    }
+
+    .modal-content {
+        max-height: calc(100vh - 80px);
+    }
+
+    .modal-header, .modal-body, .modal-footer {
+        padding: 15px;
+    }
+
+    /* Trial info for mobile */
+    .trial-info {
+        font-size: 0.9em;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    /* Recall display */
+    .recall-display {
+        min-height: 60px;
+        font-size: 1.5em;
+        flex-wrap: wrap;
+        padding: 15px;
+    }
+
+    .recall-item {
+        padding: 8px 16px;
+        font-size: 1em;
+    }
+}
+
+/* Extra small devices (phones in portrait, less than 375px) */
+@media (max-width: 374px) {
+    h1 {
+        font-size: 1.4em;
+    }
+
+    .letter-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+
+    .letter-button {
+        font-size: 1.5em;
+        padding: 15px 5px;
+        min-height: 60px;
+    }
+
+    .arrow-button {
+        height: 75px;
+        font-size: 2em;
+    }
+
+    .response-button {
+        font-size: 1.1em;
+        padding: 16px;
+        min-height: 55px;
+    }
+
+    .equation {
+        font-size: 1.5em;
+    }
+
+    .storage-item {
+        font-size: 2.5em;
+    }
+}
+
+/* Landscape orientation on mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    body {
+        padding-top: 50px;
+    }
+
+    .mobile-header {
+        height: 50px;
+    }
+
+    .container {
+        min-height: calc(100vh - 50px);
+    }
+
+    h1 {
+        font-size: 1.4em;
+        margin-bottom: 10px;
+    }
+
+    h2 {
+        font-size: 1.2em;
+        margin-bottom: 10px;
+    }
+
+    .info-box, .demographics {
+        margin: 15px 0;
+        padding: 12px;
+    }
+
+    .letter-grid {
+        grid-template-columns: repeat(6, 1fr);
+        gap: 8px;
+    }
+
+    .letter-button {
+        min-height: 50px;
+        padding: 12px 8px;
+        font-size: 1.3em;
+    }
+
+    .arrow-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .arrow-button {
+        height: 70px;
+        font-size: 2em;
+    }
+}
+
+/* Active states for better touch feedback */
+button:active {
+    transform: scale(0.95);
+}
+
+.letter-button:active,
+.arrow-button:active,
+.memory-cell:active {
+    transform: scale(0.95);
+    opacity: 0.8;
+}
+
+.task-card:active {
+    transform: translateY(-2px);
+    opacity: 0.9;
 }
 
 /* Print Styles */
